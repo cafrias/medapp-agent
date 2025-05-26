@@ -112,6 +112,21 @@ dnspython = ">=2.0.0"
 idna = ">=2.0.0"
 
 [[package]]
+name = "faker"
+version = "37.3.0"
+description = "Faker is a Python package that generates fake data for you."
+optional = false
+python-versions = ">=3.9"
+groups = ["main", "dev"]
+files = [
+    {file = "faker-37.3.0-py3-none-any.whl", hash = "sha256:48c94daa16a432f2d2bc803c7ff602509699fca228d13e97e379cd860a7e216e"},
+    {file = "faker-37.3.0.tar.gz", hash = "sha256:77b79e7a2228d57175133af0bbcdd26dc623df81db390ee52f5104d46c010f2f"},
+]
+
+[package.dependencies]
+tzdata = "*"
+
+[[package]]
 name = "fastapi"
 version = "0.115.12"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
@@ -549,6 +564,30 @@ files = [
 typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
+name = "pydantic-extra-types"
+version = "2.10.4"
+description = "Extra Pydantic types."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "pydantic_extra_types-2.10.4-py3-none-any.whl", hash = "sha256:ce064595af3cab05e39ae062752432dcd0362ff80f7e695b61a3493a4d842db7"},
+    {file = "pydantic_extra_types-2.10.4.tar.gz", hash = "sha256:bf8236a63d061eb3ecb1b2afa78ba0f97e3f67aa11dbbff56ec90491e8772edc"},
+]
+
+[package.dependencies]
+pydantic = ">=2.5.2"
+typing-extensions = "*"
+
+[package.extras]
+all = ["pendulum (>=3.0.0,<4.0.0)", "phonenumbers (>=8,<10)", "pycountry (>=23)", "pymongo (>=4.0.0,<5.0.0)", "python-ulid (>=1,<2)", "python-ulid (>=1,<4)", "pytz (>=2024.1)", "semver (>=3.0.2)", "semver (>=3.0.2,<3.1.0)", "tzdata (>=2024.1)"]
+pendulum = ["pendulum (>=3.0.0,<4.0.0)"]
+phonenumbers = ["phonenumbers (>=8,<10)"]
+pycountry = ["pycountry (>=23)"]
+python-ulid = ["python-ulid (>=1,<2)", "python-ulid (>=1,<4)"]
+semver = ["semver (>=3.0.2)"]
+
+[[package]]
 name = "pygments"
 version = "2.19.1"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -775,6 +814,18 @@ files = [
 
 [package.dependencies]
 typing-extensions = ">=4.12.0"
+
+[[package]]
+name = "tzdata"
+version = "2025.2"
+description = "Provider of IANA time zone data"
+optional = false
+python-versions = ">=2"
+groups = ["main", "dev"]
+files = [
+    {file = "tzdata-2025.2-py2.py3-none-any.whl", hash = "sha256:1a403fada01ff9221ca8044d701868fa132215d84beb92242d9acd2147f667a8"},
+    {file = "tzdata-2025.2.tar.gz", hash = "sha256:b60a638fcc0daffadf82fe0f57e53d06bdec2f36c4df66280ae79bce6bd6f2b9"},
+]
 
 [[package]]
 name = "uvicorn"
@@ -1021,4 +1072,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "e427cf7629dc597c7f64dc1ab0b2c14f15fe637ee5ced004d6ba8bb183af8ac1"
+content-hash = "5912cfdb96fddb18a4f562544b5c980ae77de517134e7317456609a80fb5ccf4"
