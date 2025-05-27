@@ -1,5 +1,6 @@
 from pymongo import AsyncMongoClient
 from typing import Optional
+from src.constants import DB_NAME
 
 class Database:
     client: Optional[AsyncMongoClient] = None
@@ -17,4 +18,4 @@ class Database:
     def get_db(cls):
         if cls.client is None:
             raise Exception("Database not connected")
-        return cls.client.medapp
+        return cls.client[DB_NAME]

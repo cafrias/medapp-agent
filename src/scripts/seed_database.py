@@ -25,7 +25,8 @@ async def generate_random_patients(count: int) -> List[Patient]:
             _id=None,
             name=fake.name(),
             national_id=str(random.randint(100000000, 999999999)),  # 9-digit number
-            phone_number=fake.phone_number()
+            phone_number=fake.phone_number(),
+            email=fake.email()
         )
         patients.append(patient)
     
