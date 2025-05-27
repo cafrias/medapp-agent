@@ -1,0 +1,25 @@
+from enum import Enum, unique
+
+@unique
+class MedicalSpecialization(Enum):
+    CARDIOLOGY = "Cardiology"
+    DERMATOLOGY = "Dermatology"
+    ENDOCRINOLOGY = "Endocrinology"
+    FAMILY_MEDICINE = "Family Medicine"
+    GASTROENTEROLOGY = "Gastroenterology"
+    HEMATOLOGY = "Hematology"
+    INFECTIOUS_DISEASE = "Infectious Disease"
+    INTERNAL_MEDICINE = "Internal Medicine"
+    NEPHROLOGY = "Nephrology"
+    NEUROLOGY = "Neurology"
+    OBSTETRICS_GYNECOLOGY = "Obstetrics and Gynecology"
+    ONCOLOGY = "Oncology"
+    OPHTHALMOLOGY = "Ophthalmology"
+    ORTHOPEDICS = "Orthopedics"
+    PEDIATRICS = "Pediatrics"
+    PSYCHIATRY = "Psychiatry"
+    PULMONOLOGY = "Pulmonology"
+    RADIOLOGY = "Radiology"
+    RHEUMATOLOGY = "Rheumatology"
+    SURGERY = "General Surgery"
+    UROLOGY = "Urology"

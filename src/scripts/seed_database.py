@@ -6,18 +6,15 @@ import sys
 import os
 
 from ..config.database import Database
-from ..models.patient import Patient
+from ..models import Patient, Professional, MedicalSpecialization
 
-# # Add the src directory to the Python path so we can import our modules
-# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+Faker.seed(12345)
 
-# from src.models.patient import Patient
-# from src.config.database import Database
+NUM_PATIENTS = 50
+NUM_PROFESSIONALS = 10
 
 async def generate_random_patients(count: int) -> List[Patient]:
     fake = Faker()
-    # Set a fixed seed for reproducible data
-    Faker.seed(12345)
     patients = []
     
     for _ in range(count):
@@ -32,14 +29,28 @@ async def generate_random_patients(count: int) -> List[Patient]:
     
     return patients
 
-async def seed_database(num_patients: int = 50):
+async def generate_random_professionals(count: int) -> List[Professional]:
+    fake = Faker()
+    professionals = []
+    
+    for _ in range(count):
+        professional = Professional(
+            _id=None,
+            name=fake.name(),
+            specialization=random.choice(list(MedicalSpecialization))
+        )
+        professionals.append(professional)
+    
+    return professionals
+
+async def seed_database():
     print(f"Connecting to database...")
     await Database.connect_db()
     
     try:
         db = Database.get_db()
-        print(f"Generating {num_patients} random patients...")
-        patients = await generate_random_patients(num_patients)
+        print(f"Generating {NUM_PATIENTS} random patients...")
+        patients = await generate_random_patients(NUM_PATIENTS)
         
         print("Inserting patients into database...")
         # Convert patients to dictionaries and insert them
@@ -47,6 +58,15 @@ async def seed_database(num_patients: int = 50):
         result = await db.patients.insert_many(patient_dicts)
         
         print(f"Successfully inserted {len(result.inserted_ids)} patients!")
+
+        print(f"Generating {NUM_PROFESSIONALS} random professionals...")
+        professionals = await generate_random_professionals(NUM_PROFESSIONALS)
+        
+        print("Inserting professionals into database...")
+        professional_dicts = [professional.to_mongo() for professional in professionals]
+        result = await db.professionals.insert_many(professional_dicts)
+        
+        print(f"Successfully inserted {len(result.inserted_ids)} professionals!")
     
     finally:
         print("Closing database connection...")
