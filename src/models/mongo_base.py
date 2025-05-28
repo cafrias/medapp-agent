@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from datetime import datetime, UTC
 from typing import Optional, TypeVar, Type, List
 from pydantic_extra_types.mongo_object_id import MongoObjectId
+from pymongo.asynchronous.database import AsyncDatabase
 
 
 T = TypeVar('T', bound='MongoBase')
@@ -24,6 +25,11 @@ class MongoBase(BaseModel):
             k: v for k, v in data.items()
             if v is not None
         }
+    
+    def get_id(self):
+        if self.id:
+            return self.id
+        raise ValueError("ID is not set")
 
     @classmethod
     async def get_all(cls: Type[T], db) -> List[T]:
@@ -42,6 +48,16 @@ class MongoBase(BaseModel):
         if document := await db[collection_name].find_one({"_id": MongoObjectId(id)}):
             return cls(**document)
         return None
+    
+    @classmethod
+    async def insert_many(cls: Type[T], db: AsyncDatabase, documents: List[T]):
+        """Insert many documents into database, it updates the documents with the inserted ids"""
+        collection_name = cls.get_collection_name()
+        documents_dicts = [document.to_mongo() for document in documents]
+        result = await db[collection_name].insert_many(documents_dicts)
+        for i, document_id in enumerate(result.inserted_ids):
+            documents[i].id = document_id
+        return result
 
     async def save(self, db):
         """Save document to database"""
