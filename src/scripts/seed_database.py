@@ -7,13 +7,14 @@ import sys
 import os
 
 from ..config.database import Database
-from ..models import Patient, Professional, MedicalSpecialization, Slot
+from ..models import Patient, Professional, MedicalSpecialization, Slot, Appointment
 
 Faker.seed(12345)
 
 NUM_PATIENTS = 50
 NUM_PROFESSIONALS = 10
 NUM_SLOTS = 100
+NUM_APPOINTMENTS = 10
 
 async def generate_random_patients(count: int) -> List[Patient]:
     fake = Faker()
@@ -64,6 +65,25 @@ async def generate_random_slots(count: int, professionals: List[Professional]) -
 
     return slots
 
+async def generate_random_appointments(db, count: int, slots: List[Slot], patients: List[Patient]) -> List[Appointment]:
+    appointments = []
+    
+    for _ in range(count):
+        slot = random.choice(slots)
+        while slot.is_booked:
+            slot = random.choice(slots)
+        
+        slot.is_booked = True
+        await slot.save(db)
+        
+        appointment = Appointment(
+            _id=None,
+            patient_id=random.choice(patients).get_id(),
+            slot_id=random.choice(slots).get_id()
+        )
+        appointments.append(appointment)
+    
+    return appointments
 
 async def seed_database():
     print(f"Connecting to database...")
@@ -91,6 +111,13 @@ async def seed_database():
         print("Inserting slots into database...")
         result = await Slot.insert_many(db, slots)
         print(f"Successfully inserted {len(result.inserted_ids)} slots!")
+
+        print(f"Generating {NUM_APPOINTMENTS} random appointments...")
+        appointments = await generate_random_appointments(db, NUM_APPOINTMENTS, slots, patients)
+        
+        print("Inserting appointments into database...")
+        result = await Appointment.insert_many(db, appointments)
+        print(f"Successfully inserted {len(result.inserted_ids)} appointments!")
     
     finally:
         print("Closing database connection...")
