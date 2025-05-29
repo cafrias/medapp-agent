@@ -4,12 +4,21 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "name": "Debug Seed Database",
             "type": "debugpy",
             "request": "launch",
             "module": "src.scripts.seed_database"
+        },
+        {
+            "name": "Debug API",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "src.main",
+            "justMyCode": true,
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
         }
     ]
 }
