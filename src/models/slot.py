@@ -21,3 +21,10 @@ class Slot(MongoBase):
             }
         }
     )
+    
+    def to_mongo(self):
+        """Convert to MongoDB document with proper enum handling"""
+        data = super().to_mongo()
+        data["start_time"] = self.start_time.isoformat()
+        data["end_time"] = self.end_time.isoformat()
+        return data

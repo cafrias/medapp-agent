@@ -1,6 +1,6 @@
 from pymongo import AsyncMongoClient
 from typing import Optional
-from src.constants import DB_NAME
+from constants import DB_NAME
 
 class Database:
     client: Optional[AsyncMongoClient] = None

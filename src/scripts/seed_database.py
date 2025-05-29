@@ -22,7 +22,6 @@ async def generate_random_patients(count: int) -> List[Patient]:
     
     for _ in range(count):
         patient = Patient(
-            _id=None,
             name=fake.name(),
             national_id=str(random.randint(100000000, 999999999)),  # 9-digit number
             phone_number=fake.phone_number(),
@@ -38,7 +37,6 @@ async def generate_random_professionals(count: int) -> List[Professional]:
     
     for _ in range(count):
         professional = Professional(
-            _id=None,
             name=fake.name(),
             specialization=random.choice(list(MedicalSpecialization))
         )
@@ -55,10 +53,9 @@ async def generate_random_slots(count: int, professionals: List[Professional]) -
         end_time = start_time + timedelta(minutes=30)
 
         slot = Slot(
-            _id=None,
             start_time=start_time,
             end_time=end_time,
-            professional_id=random.choice(professionals).get_id(),
+            professional_id=random.choice(professionals).id,
             is_booked=random.choice([True, False])
         )
         slots.append(slot)
@@ -77,9 +74,8 @@ async def generate_random_appointments(db, count: int, slots: List[Slot], patien
         await slot.save(db)
         
         appointment = Appointment(
-            _id=None,
-            patient_id=random.choice(patients).get_id(),
-            slot_id=random.choice(slots).get_id()
+            patient_id=random.choice(patients).id,
+            slot_id=random.choice(slots).id
         )
         appointments.append(appointment)
     

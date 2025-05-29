@@ -6,4 +6,4 @@ DB_NAME="medapp"
 docker compose exec mongodb mongosh --eval "db.getSiblingDB(\"$DB_NAME\").dropDatabase()"
 
 # Seed the database
-poetry run python -m src.scripts.seed_database
+PYTHONPATH=src poetry run python -m src.scripts.seed_database
