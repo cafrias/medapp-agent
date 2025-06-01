@@ -1,6 +1,5 @@
 from datetime import datetime
 from pydantic import Field, ConfigDict
-from typing import Optional
 from pydantic_extra_types.mongo_object_id import MongoObjectId
 
 from .mongo_base import MongoBase
