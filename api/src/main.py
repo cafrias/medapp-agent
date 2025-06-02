@@ -3,14 +3,14 @@ import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from config import Database
-from models import Professional, Slot, Patient
+from models import Professional, Slot, Patient, Appointment
 from fastapi import HTTPException
 from typing import List, Optional
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 from models.specializations import MedicalSpecialization
 
-from responses import SlotResponse, PatientResponse
+from responses import SlotResponse, PatientResponse, CreateAppointmentDto, AppointmentResponse
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -95,6 +95,48 @@ async def get_patient_by_national_id(national_id: str):
         raise HTTPException(status_code=404, detail="Patient not found")
     
     return PatientResponse.create(patient)
+
+@app.post("/appointments", response_model=AppointmentResponse, operation_id="create_appointment")
+async def create_appointment(appointment: CreateAppointmentDto):
+    """
+    Create a new appointment.
+    """
+    db = Database.get_db()
+    
+    patient = await Patient.get_by_id(db, appointment.patient_id)
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    slot = await Slot.get_by_id(db, appointment.slot_id)
+    if not slot:
+        raise HTTPException(status_code=404, detail="Slot not found")
+    
+    if slot.is_booked:
+        raise HTTPException(status_code=400, detail="Slot is already booked")
+    
+    if slot.start_time < datetime.now():
+        raise HTTPException(status_code=400, detail="Slot is in the past")
+
+    professional = await Professional.get_by_id(db, slot.professional_id)
+    if not professional:
+        raise HTTPException(status_code=404, detail="Professional not found")
+
+    new_appointment = Appointment(
+        patient_id=appointment.patient_id,
+        slot_id=appointment.slot_id
+    )
+
+    slot.is_booked = True
+    await slot.save(db)
+
+    try:
+        await new_appointment.save(db)
+    except Exception as e:
+        slot.is_booked = False
+        await slot.save(db)
+        raise HTTPException(status_code=500, detail=str(e))
+
+    return AppointmentResponse.create(new_appointment, patient, slot, professional)
 
 mcp = FastApiMCP(app, include_operations=["get_time_slots"])
 mcp.mount()
