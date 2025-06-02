@@ -138,7 +138,7 @@ async def create_appointment(appointment: CreateAppointmentDto):
 
     return AppointmentResponse.create(new_appointment, patient, slot, professional)
 
-mcp = FastApiMCP(app, include_operations=["get_time_slots"])
+mcp = FastApiMCP(app, include_operations=["get_patient_by_national_id", "create_appointment", "get_time_slots_by_specialization"])
 mcp.mount()
 
 if __name__ == "__main__":
