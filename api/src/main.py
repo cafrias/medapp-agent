@@ -3,14 +3,14 @@ import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from config import Database
-from models import Professional, Slot
+from models import Professional, Slot, Patient
 from fastapi import HTTPException
 from typing import List, Optional
 from bson.objectid import ObjectId
 from datetime import datetime, timedelta
 from models.specializations import MedicalSpecialization
 
-from responses import SlotResponse
+from responses import SlotResponse, PatientResponse
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -56,6 +56,8 @@ async def get_specialization_slots(
 
     return [SlotResponse.create(slot, professionals_dict[str(slot.professional_id)]) for slot in slots]
 
+
+
 @app.get("/professionals/{professional_id}/slots", response_model=List[Slot], operation_id="get_time_slots")
 async def get_professional_slots(
     professional_id: str,
@@ -80,6 +82,19 @@ async def get_professional_slots(
     }, sort=[("start_time", 1)])
 
     return slots
+
+@app.get("/patients/{national_id}", response_model=PatientResponse, operation_id="get_patient_by_national_id")
+async def get_patient_by_national_id(national_id: str):
+    """
+    Get a patient's data by their national ID.
+    """
+    db = Database.get_db()
+    patient = await Patient.get_one_by_query(db, {"national_id": national_id})
+        
+    if not patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    
+    return PatientResponse.create(patient)
 
 mcp = FastApiMCP(app, include_operations=["get_time_slots"])
 mcp.mount()

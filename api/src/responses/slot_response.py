@@ -4,7 +4,7 @@ from typing import Optional
 
 from models.professional import Professional
 from models.slot import Slot
-from . import ProfessionalResponse
+from .professional_response import ProfessionalResponse
 
 class SlotResponse(BaseModel):
     """

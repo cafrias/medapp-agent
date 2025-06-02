@@ -1,4 +1,5 @@
-from .professional_response import ProfessionalResponse
 from .slot_response import SlotResponse
+from .professional_response import ProfessionalResponse
+from .patient_response import PatientResponse
 
-__all__ = ["ProfessionalResponse", "SlotResponse"] 
+__all__ = ["SlotResponse", "ProfessionalResponse", "PatientResponse"] 

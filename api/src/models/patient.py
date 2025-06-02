@@ -3,6 +3,7 @@ from .mongo_base import MongoBase
 
 class Patient(MongoBase):
     name: str = Field(..., description="Full name of the patient")
+    # TODO: make this a unique index
     national_id: str = Field(..., description="National identification number of the patient")
     phone_number: str = Field(..., description="Contact phone number of the patient")
     email: str = Field(..., description="Contact email of the patient")

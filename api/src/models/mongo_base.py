@@ -71,6 +71,14 @@ class MongoBase(BaseModel):
         async for document in cursor:
             documents.append(cls(**document))
         return documents
+    
+    @classmethod
+    async def get_one_by_query(cls: Type[T], db: AsyncDatabase, query: dict) -> T | None:
+        """Query a document by query"""
+        collection_name = cls.get_collection_name()
+        if document := await db[collection_name].find_one(query):
+            return cls(**document)
+        return None
 
     @classmethod
     async def get_by_id(cls: Type[T], db: AsyncDatabase, id: str) -> T | None:
